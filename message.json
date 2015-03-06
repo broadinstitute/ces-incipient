@@ -1,0 +1,28 @@
+{
+  "commandline": "java -jar /task/picard.jar SamToFastq I=/apollo/input.bam F=/output/output1.fastq F2=/output/output2.fastq",
+  "inputs": [
+    {
+      "cloud": "gs://genomics-public-data/1000-genomes/HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam",
+      "local": "/input/input.bam"
+    }
+  ],
+  "outputs": [
+    {
+        "cloud": "gs://public-bucket/output1.fastq",
+        "local": "/output/output1.fastq"
+    },
+    {
+      "cloud": "gs://public-bucket/output2.fastq",
+      "local": "/output/output2.fastq"
+    }
+  ],
+  "resources": {
+    "cpus": 1,
+    "mem": 5,
+    "memunit": "GB",
+    "disk": 500,
+    "diskunit": "GB"
+
+  },
+  "docker": "broadinstitute/ces-incipient"
+}
