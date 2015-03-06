@@ -31,6 +31,7 @@ RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) 
 
     # Clean up intermediate files to keep the docker images small
     apt-get clean && \
+    mkdir -p /input /output && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # These next 4 commands are for enabling SSH to the container.

@@ -1,0 +1,24 @@
+{
+  "commandline": "md5sum /input/sample.txt > /output/sample.md5.txt",
+  "inputs": [
+    {
+      "cloud": "gs://broad-dsde-dev-public/sample.txt",
+      "local": "/input/sample.txt"
+    }
+  ],
+  "outputs": [
+    {
+      "cloud": "gs://broad-dsde-dev-public/sample.md5.txt",
+      "local": "/output/sample.md5.txt"
+    }
+  ],
+  "resources": {
+    "cpus": 1,
+    "mem": 5,
+    "memunit": "GB",
+    "disk": 500,
+    "diskunit": "GB"
+
+  },
+  "docker": "broadinstitute/ces-incipient"
+}
