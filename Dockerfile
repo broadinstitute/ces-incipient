@@ -8,13 +8,15 @@ EXPOSE 4372
 ENV TERM=xterm-256color
 
 # Where all the task's files live
-ENV TASK_DIR=/task
+ENV JOB_TASK_DIR=/job/task
+ENV JOB_INPUTS_DIR=/job/inputs
+ENV JOB_OUTPUTS_DIR=/job/outputs
 
 # Use baseimage's init system.
 CMD ["/sbin/my_init"]
 
 # Install Herc.
-ADD . $TASK_DIR
+ADD . $JOB_TASK_DIR
 RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) multiverse" && \
     add-apt-repository -y ppa:webupd8team/java && \
     echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections && \
@@ -31,7 +33,7 @@ RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) 
 
     # Clean up intermediate files to keep the docker images small
     apt-get clean && \
-    mkdir -p /input /output && \
+    mkdir -p $JOB_INPUTS_DIR $JOB_OUTPUTS_DIR && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # These next 4 commands are for enabling SSH to the container.
