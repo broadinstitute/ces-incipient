@@ -1,9 +1,6 @@
 # http://phusion.github.io/baseimage-docker/
 FROM phusion/baseimage
 
-# Herc's default port
-EXPOSE 4372
-
 # To avoid any unnecessary warnings
 ENV TERM=xterm-256color
 
