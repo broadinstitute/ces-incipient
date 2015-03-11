@@ -1,22 +1,22 @@
 {
-  "commandline": "md5sum /job/input/sample.txt > /job/output/sample.md5.txt",
+  "commandline": "md5sum /job/inputs/sample.txt > /job/outputs/sample.md5.txt",
   "inputs": [
     {
       "cloud": "gs://broad-dsde-dev-public/sample.txt",
-      "local": "/job/input/sample.txt"
+      "local": "/job/inputs/sample.txt"
     }
   ],
   "outputs": [
     {
       "cloud": "gs://broad-dsde-dev-public/sample.md5.txt",
-      "local": "/job/output/sample.md5.txt"
+      "local": "/job/outputs/sample.md5.txt"
     }
   ],
   "resources": {
-    "cpus": 1,
-    "mem": 5,
+    "cpus": 0.5,
+    "mem": 1,
     "memunit": "GB",
-    "disk": 500,
+    "disk": 1,
     "diskunit": "GB"
 
   },
