@@ -1,26 +1,26 @@
 {
-  "commandline": "java -jar /task/picard.jar SamToFastq I=/job/input/input.bam F=/job/output/output1.fastq F2=/job/output/output2.fastq",
+  "commandline": "java -jar /job/task/picard.jar SamToFastq I=/job/inputs/input.bam F=/job/outputs/output1.fastq F2=/job/outputs/output2.fastq",
   "inputs": [
     {
-      "cloud": "gs://genomics-public-data/1000-genomes/bam/HG00096.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam",
-      "local": "/job/input/input.bam"
+      "cloud": "gs://broad-dsde-dev-public/aligned_queryname_sorted.sam",
+      "local": "/job/inputs/input.bam"
     }
   ],
   "outputs": [
     {
       "cloud": "gs://broad-dsde-dev-public/output1.fastq",
-      "local": "/job/output/output1.fastq"
+      "local": "/job/outputs/output1.fastq"
     },
     {
       "cloud": "gs://broad-dsde-dev-public/output2.fastq",
-      "local": "/job/output/output2.fastq"
+      "local": "/job/outputs/output2.fastq"
     }
   ],
   "resources": {
     "cpus": 1,
-    "mem": 5,
+    "mem": 1,
     "memunit": "GB",
-    "disk": 500,
+    "disk": 1,
     "diskunit": "GB"
 
   },
