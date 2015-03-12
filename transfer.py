@@ -7,7 +7,7 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
     parsed_url = urlparse(src)
     if parsed_url.scheme.lower() in ['gs', 'file', '']:
         transfer_cmd = base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key)
-        transfer_cmd.extend(["-m", "cp", src, dest])
+        transfer_cmd.extend(["-m", "cp", "-a", "public-read", src, dest])
     elif parsed_url.scheme.lower() in ['http', 'https']:
         raise Exception("TODO: support http(s) downloads, src [%s]" % src)
     else:
