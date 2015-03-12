@@ -13,7 +13,7 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
     else:
         raise Exception("Unsupported scheme in src [%s]" % src)
     print('Running: ' + ' '.join(transfer_cmd))
-    return_code = subprocess.call(transfer_cmd, stderr=subprocess.STDOUT)
+    return_code = subprocess.call(transfer_cmd)
     if return_code != 0:
         if ignore_failure:
             log("error running [%s], ignoring" % transfer_cmd)
