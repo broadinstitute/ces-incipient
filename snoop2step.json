@@ -1,0 +1,8 @@
+{
+  "workflowParameters": {
+    "inputBam": "gs://broad-dsde-dev-public/aligned_queryname_sorted.sam",
+    "outputBam": "gs://broad-dsde-dev-public/foo.bam"
+  },
+  "workflowId": "HercTestWorkflow",
+  "callbackUri": ""
+}
