@@ -1,0 +1,24 @@
+{
+  "commandline": "cat /job/inputs/docker-init.txt > /job/outputs/job-output.txt",
+  "inputs": [
+    {
+      "cloud": "gs://broad-dsde-dev-private/docker-init.txt",
+      "local": "/job/inputs/docker-init.txt"
+    }
+  ],
+  "outputs": [
+    {
+      "cloud": "gs://broad-dsde-dev-private/job-output.txt",
+      "local": "/job/outputs/job-output.txt"
+    }
+  ],
+  "resources": {
+    "cpus": 0.25,
+    "mem": 1,
+    "memunit": "GB",
+    "disk": 1,
+    "diskunit": "GB"
+
+  },
+  "docker": "broadinstitute/ces-incipient"
+}

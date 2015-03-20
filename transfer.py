@@ -11,7 +11,7 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
     parsed_url = urlparse(src)
     if parsed_url.scheme.lower() in ['gs', 'file', '']:
         transfer_cmd = base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key)
-        transfer_cmd.extend(["-m", "cp", "-a", "public-read", kwargs['src'], kwargs['dest']])
+        transfer_cmd.extend(["-m", "cp", src, dest])
     elif parsed_url.scheme.lower() in ['http', 'https']:
         # NOTE: Aria2c automatically handles resuming failed or interrupted downloads.
 
@@ -19,10 +19,10 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
         # the entire contents of the file before it starts downloading it.  The manual says prealloc can be slow
         # with large file sizes but falloc only works on certain file systems.
 
-        transfer_cmd = ['aria2c', '-x', aria2_connections, '-s', aria2_connections, src, '--out', dest]
+        transfer_cmd = ['aria2c', '-x', str(aria2_connections), '-s', str(aria2_connections), src, '--out', dest]
     else:
         raise Exception("Unsupported scheme in src [%s]" % src)
-    log('Running: ' + ' '.join(transfer_cmd))
+    log('Running: ' + ' '.join([str(x) for x in transfer_cmd]))
     return_code = subprocess.call(transfer_cmd)
     if return_code != 0:
         raise Exception("Non-zero return code ({0}) while running [{1}]".format(return_code, transfer_cmd))
@@ -53,7 +53,7 @@ def main():
     parser.add_argument("--aws-secret-key", help="Amazon Web Service secret key")
     parser.add_argument("--aria2-connections", type=int, default=5, help="Aria2 max connectiosn per host.  Can range from 1-16.  Passed as the -x parameter to aria2c")
     args = parser.parse_args()
-    transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, aria2_connections)
+    transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, args.aria2_connections)
 
 if __name__ == "__main__":
     main()
