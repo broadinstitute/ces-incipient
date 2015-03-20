@@ -20,6 +20,7 @@ RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) 
     echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections && \
     apt-get update && \
     apt-get install -y oracle-java7-installer && \
+    apt-get install -y aria2 && \
 
     # The following is needed for 'gsutil'
     apt-get install -y libffi-dev && \

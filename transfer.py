@@ -3,26 +3,29 @@ import subprocess
 import sys
 import argparse
 
-def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_key, aws_secret_key, ignore_failure = False):
+def log(message):
+    print("[TRANSFER]", message)
+    sys.stdout.flush()
+
+def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_key, aws_secret_key, aria2_connections):
     parsed_url = urlparse(src)
     if parsed_url.scheme.lower() in ['gs', 'file', '']:
         transfer_cmd = base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key)
-        transfer_cmd.extend(["-m", "cp", "-a", "public-read", src, dest])
+        transfer_cmd.extend(["-m", "cp", "-a", "public-read", kwargs['src'], kwargs['dest']])
     elif parsed_url.scheme.lower() in ['http', 'https']:
-        raise Exception("TODO: support http(s) downloads, src [%s]" % src)
+        # NOTE: Aria2c automatically handles resuming failed or interrupted downloads.
+
+        # TODO: We might want to set --file-allocation=falloc (defaults to prealloc).  Aria2c tries to pre-allocate
+        # the entire contents of the file before it starts downloading it.  The manual says prealloc can be slow
+        # with large file sizes but falloc only works on certain file systems.
+
+        transfer_cmd = ['aria2c', '-x', aria2_connections, '-s', aria2_connections, src, '--out', dest]
     else:
         raise Exception("Unsupported scheme in src [%s]" % src)
     log('Running: ' + ' '.join(transfer_cmd))
     return_code = subprocess.call(transfer_cmd)
     if return_code != 0:
-        if ignore_failure:
-            log("error running [%s], ignoring" % transfer_cmd)
-        else:
-            raise Exception("error running [%s], ignoring" % transfer_cmd)
-
-def log(message):
-    print("[TRANSFER]", message)
-    sys.stdout.flush()
+        raise Exception("Non-zero return code ({0}) while running [{1}]".format(return_code, transfer_cmd))
 
 def base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key):
     cmd = [
@@ -48,8 +51,9 @@ def main():
     parser.add_argument("--google-p12-email", help="Email address for service account associated to google p12 file")
     parser.add_argument("--aws-access-key", help="Amazon Web Service access key, for transfering to/from")
     parser.add_argument("--aws-secret-key", help="Amazon Web Service secret key")
+    parser.add_argument("--aria2-connections", type=int, default=5, help="Aria2 max connectiosn per host.  Can range from 1-16.  Passed as the -x parameter to aria2c")
     args = parser.parse_args()
-    transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key)
+    transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, aria2_connections)
 
 if __name__ == "__main__":
     main()
