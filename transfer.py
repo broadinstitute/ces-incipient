@@ -3,6 +3,7 @@ import subprocess
 import sys
 import argparse
 import os
+import json
 
 def log(message):
     print("[TRANSFER]", message)
@@ -47,6 +48,7 @@ def main():
     print('-- transfer.py')
     print('-- cwd is ' + os.path.abspath(os.getcwd()))
     print('-- .. contains ' + str(os.listdir('..')))
+    creds = json.loads('../dsde-80a03a126b8e.json')
     parser = argparse.ArgumentParser()
     parser.add_argument("src", help="the URL/path of the object/file to transfer")
     parser.add_argument("dest", help="the URL/path of the destination of the object/file")
@@ -57,7 +59,8 @@ def main():
     parser.add_argument("--aws-secret-key", help="Amazon Web Service secret key")
     parser.add_argument("--aria2-connections", type=int, default=5, help="Aria2 max connectiosn per host.  Can range from 1-16.  Passed as the -x parameter to aria2c")
     args = parser.parse_args()
-    transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, args.aria2_connections)
+    #transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, args.aria2_connections)
+    transfer_file(args.src, args.dest, '../dsde-79e6ca4ff051.p12', 'notasecret', creds['client_email'], args.aws_access_key, args.aws_secret_key, args.aria2_connections)
 
 if __name__ == "__main__":
     main()
