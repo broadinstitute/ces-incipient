@@ -20,5 +20,5 @@
     "diskunit": "GB"
 
   },
-  "docker": "broadinstitute/ces-incipient"
+  "docker": "broadinstitute/ces-incipient:latest"
 }

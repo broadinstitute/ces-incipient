@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import subprocess
 import sys
 import argparse
+import os
 
 def log(message):
     print("[TRANSFER]", message)
@@ -43,6 +44,9 @@ def base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aw
     return cmd
 
 def main():
+    print('-- transfer.py')
+    print('-- cwd is ' + os.path.abspath(os.getcwd()))
+    print('-- .. contains ' + str(os.listdir('..')))
     parser = argparse.ArgumentParser()
     parser.add_argument("src", help="the URL/path of the object/file to transfer")
     parser.add_argument("dest", help="the URL/path of the destination of the object/file")
