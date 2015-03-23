@@ -45,9 +45,6 @@ def base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aw
     return cmd
 
 def main():
-    print('-- transfer.py')
-    print('-- cwd is ' + os.path.abspath(os.getcwd()))
-    print('-- .. contains ' + str(os.listdir('..')))
     with open('../dsde-80a03a126b8e.json') as fp:
         creds = json.loads(fp.read())
     parser = argparse.ArgumentParser()
