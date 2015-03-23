@@ -13,7 +13,6 @@ ENV JOB_OUTPUTS_DIR=/job/outputs
 CMD ["/sbin/my_init"]
 
 # Install Herc.
-ADD . $JOB_TASK_DIR
 RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) multiverse" && \
     add-apt-repository -y ppa:webupd8team/java && \
     echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections && \
@@ -33,6 +32,8 @@ RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) 
     apt-get clean && \
     mkdir -p $JOB_INPUTS_DIR $JOB_OUTPUTS_DIR && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ADD . $JOB_TASK_DIR
 
 # These next 4 commands are for enabling SSH to the container.
 # id_rsa.pub is referenced below, but this should be any public key

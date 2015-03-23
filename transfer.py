@@ -48,7 +48,8 @@ def main():
     print('-- transfer.py')
     print('-- cwd is ' + os.path.abspath(os.getcwd()))
     print('-- .. contains ' + str(os.listdir('..')))
-    creds = json.loads('../dsde-80a03a126b8e.json')
+    with open('./dsde-80a03a126b8e.json') as fp:
+        creds = json.loads(fp.read())
     parser = argparse.ArgumentParser()
     parser.add_argument("src", help="the URL/path of the object/file to transfer")
     parser.add_argument("dest", help="the URL/path of the destination of the object/file")
