@@ -50,15 +50,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("src", help="the URL/path of the object/file to transfer")
     parser.add_argument("dest", help="the URL/path of the destination of the object/file")
-    parser.add_argument("--google-p12", help="Local path to google credentials (p12 file)")
+    parser.add_argument("--google-p12", default='../dsde-79e6ca4ff051.p12', help="Local path to google credentials (p12 file)")
     parser.add_argument("--google-p12-password", help="Password for google p12 file")
-    parser.add_argument("--google-p12-email", help="Email address for service account associated to google p12 file")
+    parser.add_argument("--google-p12-email", default=creds['client_email'], help="Email address for service account associated to google p12 file")
     parser.add_argument("--aws-access-key", help="Amazon Web Service access key, for transfering to/from")
     parser.add_argument("--aws-secret-key", help="Amazon Web Service secret key")
     parser.add_argument("--aria2-connections", type=int, default=5, help="Aria2 max connectiosn per host.  Can range from 1-16.  Passed as the -x parameter to aria2c")
     args = parser.parse_args()
-    #transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, args.aria2_connections)
-    transfer_file(args.src, args.dest, '../dsde-79e6ca4ff051.p12', 'notasecret', creds['client_email'], args.aws_access_key, args.aws_secret_key, args.aria2_connections)
+    transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, args.aria2_connections)
 
 if __name__ == "__main__":
     main()
