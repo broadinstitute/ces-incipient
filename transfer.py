@@ -10,7 +10,7 @@ def log(message):
     print("[TRANSFER]", message)
     sys.stdout.flush()
 
-def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_key, aws_secret_key, aria2_connections, openam_token):
+def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_key, aws_secret_key, aria2_connections, vault_api_token):
     parsed_url = urlparse(src)
     if parsed_url.scheme.lower() in ['gs', 'file', '']:
         transfer_cmd = base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key)
@@ -19,12 +19,12 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
        # Special case for Vault URIs.  First get the HTTP Location Header
         if 'vault.broadinstitute.org' in src:
             log("Vault URL detected: " + src)
-            if openam_token is None or len(openam_token) == 0:
-                log('ERROR: No OpenAM Token was found.  Please specify --openam-token')
+            if vault_api_token is None or len(vault_api_token) == 0:
+                log('ERROR: No OpenAM Token was found.  Please specify --vault-api-token')
                 return
 
             # Get redirect
-            response = requests.get(src, cookies={'iPlanetDirectoryPro': openam_token}, allow_redirects=False)
+            response = requests.get(src, cookies={'iPlanetDirectoryPro': vault_api_token}, allow_redirects=False)
             src = response.headers.get('location')
             log("Vault Redirect URL: " + src)
 
@@ -74,9 +74,9 @@ def main():
     parser.add_argument("--aws-access-key", help="Amazon Web Service access key, for transfering to/from")
     parser.add_argument("--aws-secret-key", help="Amazon Web Service secret key")
     parser.add_argument("--aria2-connections", type=int, default=5, help="Aria2 max connectiosn per host.  Can range from 1-16.  Passed as the -x parameter to aria2c")
-    parser.add_argument("--openam-token", help="OpenAM Token.  This is needed to download from Vault")
+    parser.add_argument("--vault-api-token", help="OpenAM Token.  This is needed to download from Vault")
     args = parser.parse_args()
-    transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, args.aria2_connections, args.openam_token)
+    transfer_file(args.src, args.dest, args.google_p12, args.google_p12_password, args.google_p12_email, args.aws_access_key, args.aws_secret_key, args.aria2_connections, args.vault_api_token)
 
 if __name__ == "__main__":
     main()
