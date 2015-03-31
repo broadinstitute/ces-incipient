@@ -12,6 +12,7 @@ def log(message):
 
 def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_key, aws_secret_key, aria2_connections, vault_api_token):
     parsed_url = urlparse(src)
+    mv_cmd = None
     if parsed_url.scheme.lower() in ['gs', 'file', '']:
         transfer_cmd = base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key)
         transfer_cmd.extend(["-m", "cp", src, dest])
@@ -33,13 +34,21 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
         # the entire contents of the file before it starts downloading it.  The manual says prealloc can be slow
         # with large file sizes but falloc only works on certain file systems.
 
-        transfer_cmd = ['aria2c', '-x', str(aria2_connections), '-s', str(aria2_connections), src, '--out', dest]
+        local_dest = os.path.basename(dest)
+        transfer_cmd = ['aria2c', '-x', str(aria2_connections), '-s', str(aria2_connections), src, '--out', local_dest]
+        mv_cmd = ['mv', local_dest, dest]
     else:
         raise Exception("Unsupported scheme in src [%s]" % src)
     log('Running: ' + ' '.join([str(x) for x in transfer_cmd]))
     return_code = subprocess.call(transfer_cmd)
     if return_code != 0:
         raise Exception("Non-zero return code ({0}) while running [{1}]".format(return_code, transfer_cmd))
+
+    if mv_cmd is not None:
+        log('Running: ' + ' '.join([str(x) for x in mv_cmd]))
+        return_code = subprocess.call(mv_cmd)
+        if return_code != 0:
+            raise Exception("Non-zero return code ({0}) while running [{1}]".format(return_code, transfer_cmd))
 
 def base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key):
     cmd = [
