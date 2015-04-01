@@ -25,8 +25,18 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
                 return
 
             # Get redirect
+            log('Getting Vault redirect...')
             response = requests.get(src, cookies={'iPlanetDirectoryPro': vault_api_token}, allow_redirects=False)
             src = response.headers.get('location')
+            if src is None:
+                log('ERROR: Unable to get Vault redirect URL')
+                print('HTTP STATUS: ' + str(response.status_code))
+                print('HTTP HEADERS: ')
+                for k,v in response.headers.items():
+                    print('{}: {}'.format(k,v))
+                print('HTTP BODY: ')
+                print(response.text)
+                return
             log("Vault Redirect URL: " + src)
 
         # NOTE: Aria2c automatically handles resuming failed or interrupted downloads.
