@@ -46,7 +46,8 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
 
         local_dest = os.path.basename(dest)
         transfer_cmd = ['aria2c', '-x', str(aria2_connections), '-s', str(aria2_connections), src, '--out', local_dest]
-        mv_cmd = ['mv', local_dest, dest]
+        if local_dest != dest:
+            mv_cmd = ['mv', local_dest, dest]
     else:
         raise Exception("Unsupported scheme in src [%s]" % src)
     log('Running: ' + ' '.join([str(x) for x in transfer_cmd]))
@@ -58,7 +59,7 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
         log('Running: ' + ' '.join([str(x) for x in mv_cmd]))
         return_code = subprocess.call(mv_cmd)
         if return_code != 0:
-            raise Exception("Non-zero return code ({0}) while running [{1}]".format(return_code, transfer_cmd))
+            raise Exception("Non-zero return code ({0}) while running [{1}]".format(return_code, mv_cmd))
 
 def base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key):
     cmd = [
