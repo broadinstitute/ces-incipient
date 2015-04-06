@@ -18,6 +18,7 @@ RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) 
     echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections && \
     echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections && \
     apt-get update && \
+    apt-get install -y r-base && \
     apt-get install -y tabix && \
     apt-get install -y bwa && \
     apt-get install -y oracle-java7-installer && \
