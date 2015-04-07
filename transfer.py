@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 import subprocess
 import sys
 import argparse
-import os
+import os.path
 import json
 import requests
 
@@ -15,6 +15,14 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
     mv_cmd = None
     if parsed_url.scheme.lower() in ['gs', 'file', '']:
         transfer_cmd = base_gsutil_command(p12_path, p12_password, google_email, aws_access_key, aws_secret_key)
+
+        if parsed_url.scheme.lower() in ['file', ''] and not os.path.isfile(parsed_url.path):
+            # Attempting to transfer nonexistent file. Switch out the file to transfer with one we create
+            # that says we couldn't find the file we actually wanted to transfer.
+            with open("__xfer_filenotfound", 'w') as fnf:
+                fnf.write("Failed to find file for transfer: " + src)
+                src = os.path.abspath(fnf.name)
+
         transfer_cmd.extend(["-m", "cp", src, dest])
     elif parsed_url.scheme.lower() in ['http', 'https']:
        # Special case for Vault URIs.  First get the HTTP Location Header
