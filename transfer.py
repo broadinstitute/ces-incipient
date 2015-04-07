@@ -19,7 +19,7 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
         if parsed_url.scheme.lower() in ['file', ''] and not os.path.isfile(parsed_url.path):
             # Attempting to transfer nonexistent file. Switch out the file to transfer with one we create
             # that says we couldn't find the file we actually wanted to transfer.
-            with open("__xfer_filenotfound", 'w') as fnf:
+            with open("__xfer_filenotfound_" + os.path.basename(parsed_url.path), 'w') as fnf:
                 fnf.write("Failed to find file for transfer: " + src)
                 src = os.path.abspath(fnf.name)
 
