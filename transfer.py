@@ -5,6 +5,7 @@ import argparse
 import os.path
 import json
 import requests
+import os
 
 def log(message):
     print("[TRANSFER]", message)
@@ -55,6 +56,8 @@ def transfer_file(src, dest, p12_path, p12_password, google_email, aws_access_ke
         local_dest = os.path.basename(dest)
         transfer_cmd = ['aria2c', '-x', str(aria2_connections), '-s', str(aria2_connections), src, '--out', local_dest]
         if local_dest != dest:
+            if not os.path.exists(os.path.dirname(dest)):
+                os.makedirs(os.path.dirname(dest))
             mv_cmd = ['mv', local_dest, dest]
     else:
         raise Exception("Unsupported scheme in src [%s]" % src)
