@@ -4,10 +4,15 @@ FROM phusion/baseimage
 # To avoid any unnecessary warnings
 ENV TERM=xterm-256color
 
+# Aurora sandbox location
+ENV SANDBOX_DIR=/mnt/mesos/sandbox/sandbox
+ENV JOB_SYMLINK_DIR=$SANDBOX_DIR/__jobio
+
 # Where all the task's files live
-ENV JOB_TASK_DIR=/job/task
-ENV JOB_INPUTS_DIR=/job/inputs
-ENV JOB_OUTPUTS_DIR=/job/outputs
+ENV JOB_ROOT_DIR=/job
+ENV JOB_TASK_DIR=$JOB_ROOT_DIR/task
+ENV JOB_INPUTS_DIR=$JOB_ROOT_DIR/inputs
+ENV JOB_OUTPUTS_DIR=$JOB_ROOT_DIR/outputs
 
 # Use baseimage's init system.
 CMD ["/sbin/my_init"]
@@ -33,6 +38,8 @@ RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) 
 
     # Clean up intermediate files to keep the docker images small
     apt-get clean && \
+	mkdir -p $JOB_SYMLINK_DIR && \
+	ln -s $JOB_SYMLINK_DIR $JOB_ROOT_DIR && \
     mkdir -p $JOB_INPUTS_DIR $JOB_OUTPUTS_DIR && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
