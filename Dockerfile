@@ -6,13 +6,13 @@ ENV TERM xterm-256color
 
 # Aurora sandbox location
 ENV SANDBOX_DIR /mnt/mesos/sandbox/sandbox
-ENV JOB_SYMLINK_DIR $SANDBOX_DIR/__jobio
+ENV JOB_SYMLINK_DIR /mnt/mesos/sandbox/__jobio
 
 # Where all the task's files live
 ENV JOB_ROOT_DIR /job
-ENV JOB_TASK_DIR $JOB_ROOT_DIR/task
-ENV JOB_INPUTS_DIR $JOB_ROOT_DIR/inputs
-ENV JOB_OUTPUTS_DIR $JOB_ROOT_DIR/outputs
+ENV JOB_TASK_DIR /job/task
+ENV JOB_INPUTS_DIR /job/inputs
+ENV JOB_OUTPUTS_DIR /job/outputs
 
 # Use baseimage's init system.
 CMD ["/sbin/my_init"]
