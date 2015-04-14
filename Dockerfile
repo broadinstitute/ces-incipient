@@ -6,7 +6,7 @@ ENV TERM xterm-256color
 
 # Aurora sandbox location
 ENV SANDBOX_DIR /mnt/mesos/sandbox/sandbox
-ENV JOB_SYMLINK_DIR /mnt/mesos/sandbox/__jobio
+ENV JOB_SYMLINK_DIR /mnt/mesos/sandbox/sandbox/__jobio
 
 # Where all the task's files live
 ENV JOB_ROOT_DIR /job
@@ -17,7 +17,7 @@ ENV JOB_OUTPUTS_DIR /job/outputs
 # Use baseimage's init system.
 CMD ["/sbin/my_init"]
 
-# Install Herc.
+# Install dependencies.
 RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) multiverse" && \
     add-apt-repository -y ppa:webupd8team/java && \
     echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections && \
@@ -38,10 +38,10 @@ RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) 
 
     # Clean up intermediate files to keep the docker images small
     apt-get clean && \
-    mkdir -p $JOB_SYMLINK_DIR && \
-    ln -s $JOB_SYMLINK_DIR $JOB_ROOT_DIR && \
-    mkdir -p $JOB_INPUTS_DIR $JOB_OUTPUTS_DIR && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    mkdir -pv $JOB_SYMLINK_DIR && \
+    ln -sv $JOB_SYMLINK_DIR $JOB_ROOT_DIR && \
+    mkdir -pv $JOB_INPUTS_DIR $JOB_OUTPUTS_DIR && \
+    rm -rfv /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ADD . $JOB_TASK_DIR
 
